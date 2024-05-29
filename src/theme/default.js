@@ -12,6 +12,9 @@ const theme = createTheme({
         error: {
             main: red.A400,
         },
+        contrast: {
+            main: "#fff"
+        }
     },
     typography: {
         fontFamily: 'Poppins, Arial, sans-serif',
