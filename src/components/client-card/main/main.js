@@ -11,7 +11,6 @@ import {Controller, useForm} from "react-hook-form";
 import {user} from "../../../validator-schemas/user";
 
 const Main = () => {
-
     const {
         control,
         handleSubmit,
@@ -25,7 +24,8 @@ const Main = () => {
             headers: {
                 'Content-Type': 'application/json',
                 "Authorization": "Basic YWRtaW46QWRtaW4yMDI0",
-                // "CSRF-TOKEN": "a57f36ec28de4ced94465cf66f6a9b61",
+                // "X-Csrf-Token": "a57f36ec28de4ced94465cf66f6a9b61",
+                "CSRF-TOKEN": "97b5a78996564c0d88e06ab0b184b0d3",
                 // "JSESSIONID": "7403DD5B11959FE1FAEFFE80C37F8192"
             },
             body: JSON.stringify({

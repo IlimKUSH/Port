@@ -1,14 +1,15 @@
-import 'react-html5-camera-photo/build/css/index.css';
 import {useRef, useState} from "react";
-import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
-import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+
+import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
-import Avatar from "../../../assets/images/avatar3.png"
+import Avatar from "../../../assets/images/avatar.png"
 
 const AvatarSection = () => {
     const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -30,6 +31,7 @@ const AvatarSection = () => {
         const context = canvasRef.current.getContext('2d');
         context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
         const imageData = canvasRef.current.toDataURL('image/png');
+        handleSendPhoto(imageData)
         setPhoto(imageData);
         setIsCameraOpen(false);
 
@@ -43,6 +45,17 @@ const AvatarSection = () => {
         setPhoto(null);
         setIsCameraOpen(false);
     };
+
+    const handleSendPhoto = async (base64) => {
+        await fetch("https://narynport.brisklyminds.com/ndp/ws/files/upload", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": "Basic YWRtaW46QWRtaW4yMDI0",
+            },
+            body: base64
+        })
+    }
 
     return (
         <Box>
@@ -62,15 +75,21 @@ const AvatarSection = () => {
                     }} />
                 }
                 <Stack direction="row" gap={3}>
-                    <IconButton onClick={handleOpenCamera}>
-                        {isCameraOpen ? <CloseOutlinedIcon color="primary" fontSize="unset" /> : <CameraAltOutlinedIcon color="primary" fontSize="unset" />}
-                    </IconButton>
-                    <IconButton>
-                        <PostAddOutlinedIcon color="primary" fontSize="unset" />
-                    </IconButton>
-                    <IconButton onClick={handleDeletePhoto}>
-                        <DeleteOutlineIcon color="primary" fontSize="unset" />
-                    </IconButton>
+                    <Tooltip title={isCameraOpen ? "Выключить камеру" : "Включить камеру"}>
+                        <IconButton onClick={handleOpenCamera}>
+                            {isCameraOpen ? <CloseOutlinedIcon color="primary" fontSize="unset" /> : <CameraAltOutlinedIcon color="primary" fontSize="unset" />}
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Проверка по паспорту">
+                        <IconButton>
+                            <PostAddOutlinedIcon color="primary" fontSize="unset" />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Удалить фото">
+                        <IconButton onClick={handleDeletePhoto}>
+                            <DeleteOutlineIcon color="primary" fontSize="unset" />
+                        </IconButton>
+                    </Tooltip>
                 </Stack>
             </Stack>
 

@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import AddIcon from '@mui/icons-material/Add';
-import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
+import RecordSection from "../../ui/record-section/record-section";
 
 const Header = () => {
     return (
@@ -12,13 +12,12 @@ const Header = () => {
                 Карточка клиента
             </Typography>
             <Stack direction="row" gap={4}>
-                <Button variant="outlined" color="primary" sx={{ textTransform: "unset"}}  endIcon={<DocumentScannerIcon />}>
-                    Распознать клиента
-                </Button>
+                <RecordSection />
                 <Button variant="contained" sx={{ color: "#fff", textTransform: "unset"}} endIcon={<AddIcon color="contrast" />}>
                     Добавить клиента
                 </Button>
             </Stack>
+
         </Stack>
     );
 };
