@@ -26,6 +26,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "https://narynport.brisklyminds.com/",
   "homepage": "./",
   "eslintConfig": {
     "extends": [

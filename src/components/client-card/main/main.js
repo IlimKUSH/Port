@@ -20,11 +20,13 @@ const Main = () => {
     });
 
     const onSubmit = async (data) => {
-        await fetch("https://concept.sanarip.org/concept/ws/v2/rest/com.axelor.apps.base.db.Partner", {
+        await fetch("https://narynport.brisklyminds.com/ndp/ws/v2/rest/com.axelor.apps.base.db.Partner", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": "Basic YWRtaW46QWRtaW4yMDI0"
+                "Authorization": "Basic YWRtaW46QWRtaW4yMDI0",
+                // "CSRF-TOKEN": "a57f36ec28de4ced94465cf66f6a9b61",
+                // "JSESSIONID": "7403DD5B11959FE1FAEFFE80C37F8192"
             },
             body: JSON.stringify({
                 ...data
