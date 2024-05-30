@@ -6,6 +6,21 @@ import DocumentScannerIcon from "@mui/icons-material/DocumentScanner";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import Stack from "@mui/material/Stack";
+
+const modalStyles = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    border: '1px solid #000',
+    boxShadow: 24,
+    borderRadius: 1,
+    p: 2,
+}
 
 const RecordSection = () => {
     const [open, setOpen] = useState(false);
@@ -71,70 +86,71 @@ const RecordSection = () => {
                 open={open}
                 onClose={handleCloseModal}
             >
-                <Box sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    bgcolor: 'background.paper',
-                    border: '2px solid #000',
-                    boxShadow: 24,
-                    p: 4,
-                }}>
-                    <Box sx={{
-                        position: "relative",
-                        width: { xs: "320px", md: "400px" },
-                        height: { xs: "320px", md: "400px" },
-                    }}>
-                        <Webcam
-                            style={{
-                                display: "block",
-                                borderRadius: "50%",
-                                border: `2px solid "#000"`,
-                                objectFit: "cover",
-                                width: "100%",
-                                height: "100%",
-                            }}
-                            videoConstraints={{ facingMode: "user" }}
-                            ref={videoRef}
-                        />
-                        {recording &&
-                            <CircularProgress
-                                color="success"
-                                size="100%"
-                                thickness={0.5}
-                                variant="determinate"
-                                value={progress}
-                                sx={{ position: "absolute", top: 0, left: 0 }}
-                            />
-                        }
-                        {!recording && (
-                            <Box
-                                sx={{
-                                    cursor: "pointer",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    position: "absolute",
-                                    background: "#000",
-                                    opacity: 0.5,
-                                    top: 0,
+                <Box sx={modalStyles}>
+                    <Stack direction="column" gap={2}>
+                        <Stack direction="row" alignItems="center" justifyContent="space-between">
+                            <Typography variant="h6">
+                                Распознать клиента
+                            </Typography>
+                            <IconButton onClick={handleCloseModal}>
+                                <CloseOutlinedIcon />
+                            </IconButton>
+                        </Stack>
+                        <Box sx={{
+                            position: "relative",
+                            width: { xs: "320px", md: "400px" },
+                            height: { xs: "320px", md: "400px" },
+                        }}>
+                            <Webcam
+                                style={{
+                                    display: "block",
+                                    borderRadius: "50%",
+                                    border: `2px solid "#000"`,
+                                    objectFit: "cover",
                                     width: "100%",
                                     height: "100%",
-                                    borderRadius: "50%",
-                                    transition: "opacity 0.5s",
-                                    "&:hover": {
-                                        opacity: 0,
-                                    },
                                 }}
-                                onClick={startRecording}
-                            >
-                                <Typography align="center" color="contrast.main" variant="h4">
-                                    Распознать клиента
-                                </Typography>
-                            </Box>
-                        )}
-                    </Box>
+                                videoConstraints={{ facingMode: "user" }}
+                                ref={videoRef}
+                            />
+                            {recording &&
+                                <CircularProgress
+                                    color="success"
+                                    size="100%"
+                                    thickness={0.5}
+                                    variant="determinate"
+                                    value={progress}
+                                    sx={{ position: "absolute", top: 0, left: 0 }}
+                                />
+                            }
+                            {!recording && (
+                                <Box
+                                    sx={{
+                                        cursor: "pointer",
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        position: "absolute",
+                                        background: "#000",
+                                        opacity: 0.5,
+                                        top: 0,
+                                        width: "100%",
+                                        height: "100%",
+                                        borderRadius: "50%",
+                                        transition: "opacity 0.5s",
+                                        "&:hover": {
+                                            opacity: 0,
+                                        },
+                                    }}
+                                    onClick={startRecording}
+                                >
+                                    <Typography align="center" color="contrast.main" variant="h4">
+                                        Распознать клиента
+                                    </Typography>
+                                </Box>
+                            )}
+                        </Box>
+                    </Stack>
                 </Box>
             </Modal>
         </>

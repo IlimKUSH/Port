@@ -33,8 +33,6 @@ const CameraButton = () => {
         tracks.forEach(track => track.stop());
     };
 
-    console.log(photo)
-
     return (
         <div>
             <IconButton onClick={handleOpenCamera}>

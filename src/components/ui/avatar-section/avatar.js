@@ -9,6 +9,8 @@ import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
+import PassportCapture from "../passport-capture/passport-capure";
+
 import Avatar from "../../../assets/images/avatar.png"
 
 const AvatarSection = () => {
@@ -80,11 +82,12 @@ const AvatarSection = () => {
                             {isCameraOpen ? <CloseOutlinedIcon color="primary" fontSize="unset" /> : <CameraAltOutlinedIcon color="primary" fontSize="unset" />}
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Проверка по паспорту">
-                        <IconButton>
-                            <PostAddOutlinedIcon color="primary" fontSize="unset" />
-                        </IconButton>
-                    </Tooltip>
+                    {/*<Tooltip title="Проверка по паспорту">*/}
+                    {/*    <IconButton>*/}
+                    {/*        <PostAddOutlinedIcon color="primary" fontSize="unset" />*/}
+                    {/*    </IconButton>*/}
+                    {/*</Tooltip>*/}
+                    <PassportCapture />
                     <Tooltip title="Удалить фото">
                         <IconButton onClick={handleDeletePhoto}>
                             <DeleteOutlineIcon color="primary" fontSize="unset" />
