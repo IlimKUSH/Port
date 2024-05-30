@@ -1,4 +1,3 @@
-import 'react-html5-camera-photo/build/css/index.css';
 import {useRef, useState} from "react";
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import IconButton from "@mui/material/IconButton";

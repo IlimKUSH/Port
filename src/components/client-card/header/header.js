@@ -2,9 +2,9 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import AddIcon from '@mui/icons-material/Add';
-import RecordSection from "../../ui/record-section/record-section";
+import FaceidCapture from "../../ui/faceid-capture/faceid-capture";
 
-const Header = () => {
+const Header = ({setFaceId, handleResetForm}) => {
     return (
         <Stack justifyContent="space-between" alignItems="center" width="100%"
                sx={{flexDirection: {md: "row", sm: "row", xs: "column"}, gap: 2}}>
@@ -12,8 +12,8 @@ const Header = () => {
                 Карточка клиента
             </Typography>
             <Stack direction="row" gap={4}>
-                <RecordSection />
-                <Button variant="contained" sx={{ color: "#fff", textTransform: "unset"}} endIcon={<AddIcon color="contrast" />}>
+                <FaceidCapture setFaceId={setFaceId} />
+                <Button onClick={handleResetForm} variant="contained" sx={{ color: "#fff", textTransform: "unset"}} endIcon={<AddIcon color="contrast" />}>
                     Добавить клиента
                 </Button>
             </Stack>

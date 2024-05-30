@@ -1,19 +1,22 @@
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
-import PostAddOutlinedIcon from "@mui/icons-material/PostAddOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 
-import PassportCapture from "../passport-capture/passport-capure";
+import PassportCapture from "../passport-capture/passport-capture";
 
 import Avatar from "../../../assets/images/avatar.png"
+import {getCookies} from "../../../hooks/get-cookies";
 
-const AvatarSection = () => {
+const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setValues}) => {
+    const cookies = getCookies();
+
+    const [faceIdPhoto, setFaceIdPhoto] = useState(null)
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const [photo, setPhoto] = useState(null);
     const videoRef = useRef(null);
@@ -33,8 +36,21 @@ const AvatarSection = () => {
         const context = canvasRef.current.getContext('2d');
         context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
         const imageData = canvasRef.current.toDataURL('image/png');
-        handleSendPhoto(imageData)
         setPhoto(imageData);
+
+        const base64ToBinary = (base64) => {
+            const base64WithoutPrefix = base64.replace("data:image/png;base64,", "");
+            const binaryString = atob(base64WithoutPrefix);
+            const binaryLen = binaryString.length;
+            const bytes = new Uint8Array(binaryLen);
+            for (let i = 0; i < binaryLen; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes;
+        };
+        const binaryData = base64ToBinary(imageData);
+        handleSendPhoto(binaryData);
+
         setIsCameraOpen(false);
 
         // Stop the video stream
@@ -45,31 +61,66 @@ const AvatarSection = () => {
 
     const handleDeletePhoto = () => {
         setPhoto(null);
+        console.log(3)
+        setFaceIdPhoto(null);
         setIsCameraOpen(false);
     };
 
-    const handleSendPhoto = async (base64) => {
-        await fetch("https://narynport.brisklyminds.com/ndp/ws/files/upload", {
+    const handleSendPhoto = async (binary) => {
+        await fetch(process.env.REACT_APP_AXELOR_API + "/ws/files/upload", {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/octet-stream',
                 "Authorization": "Basic YWRtaW46QWRtaW4yMDI0",
+                'X-CSRF-Token': cookies['CSRF-TOKEN'],
+                "X-File-Name": "Avatar.png",
+                "X-File-Offset": "0",
+                "X-File-Size": binary.byteLength.toString(),
+                "X-File-Type": "image/png"
             },
-            body: base64
+            body: binary.buffer
         })
+            .then((res) => res.json())
+            .then((data) => {
+                setPictureId(data.id)
+            })
     }
+
+    useEffect(() => {
+        if (!pictureId) return;
+        fetch(process.env.REACT_APP_AXELOR_API + `/ws/rest/com.axelor.meta.db.MetaFile/${pictureId}/content/download`, {
+            method: "GET",
+            headers: {
+                "Authorization": "Basic YWRtaW46QWRtaW4yMDI0",
+                'X-CSRF-Token': cookies['CSRF-TOKEN'],
+            }
+        })
+            .then((res) => res.blob())
+            .then((data) => {
+                console.log(data);
+                setFaceIdPhoto(URL.createObjectURL(data))
+            })
+    }, [pictureId]);
+
+    useEffect(() => {
+        if (resetForm) {
+            handleDeletePhoto()
+            setResetForm(false)
+        }
+    }, [resetForm, setResetForm])
 
     return (
         <Box>
             <Stack direction="column" alignItems="center" gap={2}>
                 {isCameraOpen ? (
                     <Stack direction="column" alignItems="center" maxWidth={350}>
-                        <Box component="video" ref={videoRef} autoPlay style={{display: 'block',border: "1px solid #80A9F8", width: "100%", maxHeight: "370px", borderRadius: 40}}></Box>
+                        <Box component="video" ref={videoRef} autoPlay style={{display: 'block',
+                             border: "1px solid #80A9F8", width: "100%", maxHeight: "370px", borderRadius: 40}}></Box>
                         <IconButton onClick={handleCapturePhoto}>
                             <CameraAltOutlinedIcon color="primary" fontSize="large" />
                         </IconButton>
                     </Stack>
-                ) : <Box component="img" src={photo ?? Avatar} sx={{
+                ) : <Box component="img" src={photo ?? faceIdPhoto ?? Avatar} sx={{
                         border: "1px solid #80A9F8",
                         borderRadius: 10,
                         maxWidth: {md: "350px", xs: "100%"},
@@ -82,12 +133,7 @@ const AvatarSection = () => {
                             {isCameraOpen ? <CloseOutlinedIcon color="primary" fontSize="unset" /> : <CameraAltOutlinedIcon color="primary" fontSize="unset" />}
                         </IconButton>
                     </Tooltip>
-                    {/*<Tooltip title="Проверка по паспорту">*/}
-                    {/*    <IconButton>*/}
-                    {/*        <PostAddOutlinedIcon color="primary" fontSize="unset" />*/}
-                    {/*    </IconButton>*/}
-                    {/*</Tooltip>*/}
-                    <PassportCapture />
+                    <PassportCapture setValues={setValues} />
                     <Tooltip title="Удалить фото">
                         <IconButton onClick={handleDeletePhoto}>
                             <DeleteOutlineIcon color="primary" fontSize="unset" />
@@ -96,7 +142,6 @@ const AvatarSection = () => {
                 </Stack>
             </Stack>
 
-            {/* Hidden canvas element used for capturing the photo */}
             <canvas ref={canvasRef} style={{display: 'none'}} width="640" height="480"></canvas>
         </Box>
     );
