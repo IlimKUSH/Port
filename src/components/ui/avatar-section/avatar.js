@@ -34,7 +34,7 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setVal
 
     const handleCapturePhoto = () => {
         const context = canvasRef.current.getContext('2d');
-        context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        context.drawImage(videoRef.current, 0, 0, 640, 480);
         const imageData = canvasRef.current.toDataURL('image/png');
         setPhoto(imageData);
 
@@ -114,8 +114,8 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setVal
             <Stack direction="column" alignItems="center" gap={2}>
                 {isCameraOpen ? (
                     <Stack direction="column" alignItems="center" maxWidth={350}>
-                        <Box component="video" ref={videoRef} autoPlay style={{display: 'block',
-                             border: "1px solid #80A9F8", width: "100%", maxHeight: "370px", borderRadius: 40}}></Box>
+                        <video ref={videoRef} autoPlay playsInline style={{display: 'block',
+                            border: "1px solid #80A9F8", width: "100%", maxHeight: "370px", borderRadius: 40}}></video>
                         <IconButton onClick={handleCapturePhoto}>
                             <CameraAltOutlinedIcon color="primary" fontSize="large" />
                         </IconButton>
@@ -124,7 +124,7 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setVal
                         border: "1px solid #80A9F8",
                         borderRadius: 10,
                         maxWidth: {md: "350px", xs: "100%"},
-                        maxHeight: {md: "370px", xs: "300px"}
+                        // maxHeight: {md: "370px", xs: "300px"}
                     }} />
                 }
                 <Stack direction="row" gap={3}>

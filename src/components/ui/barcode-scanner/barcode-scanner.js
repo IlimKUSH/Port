@@ -11,7 +11,7 @@ const BarcodeScanner = () => {
 
     useEffect(() => {
         if (!isEnabled) return
-        const config = { fps: 10, qrbox: {width: 410, height: 270} };
+        const config = { fps: 10, qrbox: {width: 400, height: 270} };
 
         const html5QrCode = new Html5Qrcode("barcodeContainer");
 

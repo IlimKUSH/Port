@@ -38,7 +38,9 @@ const FaceidCapture = ({setFaceId}) => {
         setIsCameraOpen(true);
         handleOpenModal()
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: {
+                    facingMode: { ideal: "environment" },
+                }, audio: false });
             videoRef.current.srcObject = stream;
         } catch (error) {
             console.error("Error accessing the camera: ", error);
@@ -131,8 +133,8 @@ const FaceidCapture = ({setFaceId}) => {
                         </Stack>
                         {isCameraOpen ? (
                                 <Stack direction="column" alignItems="center" gap={1}>
-                                    <Box component="video" ref={videoRef} autoPlay style={{display: 'block', border: "1px solid #80A9F8",
-                                        width: "100%", maxHeight: "370px", borderRadius: 40}}></Box>
+                                    <video ref={videoRef} autoPlay playsInline style={{display: 'block', border: "1px solid #80A9F8",
+                                        width: "100%", borderRadius: 40}}></video>
                                     <IconButton onClick={handleCapturePhoto}>
                                         <CameraAltOutlinedIcon color="primary" fontSize="large" />
                                     </IconButton>
@@ -143,8 +145,8 @@ const FaceidCapture = ({setFaceId}) => {
                                      sx={{
                                          border: "1px solid #80A9F8",
                                          borderRadius: 10,
-                                         maxWidth: "100%",
-                                         maxHeight: {md: "370px", xs: "300px"}
+                                         width: "100%",
+                                         // maxHeight: {md: "370px", xs: "300px"}
                                      }} />
 
                                 {isCameraOpen ?
@@ -161,7 +163,9 @@ const FaceidCapture = ({setFaceId}) => {
             </Modal>
 
             {/* Hidden canvas element used for capturing the photo */}
-            <canvas ref={canvasRef} style={{display: 'none'}} width="640" height="480"></canvas>
+            <canvas ref={canvasRef} style={{display: 'none'}} width={canvasRef.current?.width}
+                    height={canvasRef.current?.height}></canvas>
+
         </Box>
     );
 };
