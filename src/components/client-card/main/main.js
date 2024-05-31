@@ -14,6 +14,7 @@ import {user} from "../../../validator-schemas/user";
 import {getCookies} from "../../../hooks/get-cookies";
 import Header from "../header/header";
 import BarcodeScanner from "../../ui/barcode-scanner/barcode-scanner";
+import Typography from "@mui/material/Typography";
 
 const Main = () => {
     const cookies = getCookies();
@@ -27,6 +28,9 @@ const Main = () => {
     const [resetForm, setResetForm] = useState(false)
 
     const {
+        formState: {
+            errors
+        },
         control,
         handleSubmit,
         setValue,
@@ -114,6 +118,8 @@ const Main = () => {
         setFaceIdPartnerId(null)
     }
 
+    console.log(errors)
+
     return (
         <>
             <Header setFaceId={setFaceId} handleResetForm={handleResetForm} />
@@ -144,6 +150,8 @@ const Main = () => {
                                                    fontWeight: 600
                                                }
                                            }}
+                                           error={!!errors.name?.message ?? false}
+                                           helperText={!!errors.name?.message && <Typography variant="caption">{errors.name.message}</Typography>}
                                            value={field.value != null ? field.value : ""}
                                 />
                             )}/>
@@ -159,6 +167,8 @@ const Main = () => {
                                                    fontWeight: 600
                                                }
                                            }}
+                                           error={!!errors.passportPersonalNumber?.message ?? false}
+                                           helperText={!!errors.passportPersonalNumber?.message && <Typography variant="caption">{errors.passportPersonalNumber.message}</Typography>}
                                            value={field.value != null ? field.value : ""}
                                 />
                             )}/>
@@ -174,6 +184,8 @@ const Main = () => {
                                                    fontWeight: 600
                                                }
                                            }}
+                                           error={!!errors.passportPersonalSeries?.message ?? false}
+                                           helperText={!!errors.passportPersonalSeries?.message && <Typography variant="caption">{errors.passportPersonalSeries.message}</Typography>}
                                            value={field.value != null ? field.value : ""}
                                 />
                             )}/>
@@ -189,6 +201,8 @@ const Main = () => {
                                                    fontWeight: 600
                                                }
                                            }}
+                                           error={!!errors.passportValidity?.message ?? false}
+                                           helperText={!!errors.passportValidity?.message && <Typography variant="caption">{errors.passportValidity.message}</Typography>}
                                            value={field.value != null ? field.value : ""}
                                 />
                             )}/>
@@ -204,6 +218,8 @@ const Main = () => {
                                                    fontWeight: 600
                                                }
                                            }}
+                                           error={!!errors.dateOfBirth?.message ?? false}
+                                           helperText={!!errors.dateOfBirth?.message && <Typography variant="caption">{errors.dateOfBirth.message}</Typography>}
                                            value={field.value != null ? field.value : ""}
                                 />
                             )}/>
