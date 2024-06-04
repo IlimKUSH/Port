@@ -34,7 +34,15 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setVal
 
     const handleCapturePhoto = () => {
         const context = canvasRef.current.getContext('2d');
-        context.drawImage(videoRef.current, 0, 0, 640, 480);
+        const video = videoRef.current;
+
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+
+        canvasRef.current.width = videoWidth;
+        canvasRef.current.height = videoHeight;
+
+        context.drawImage(video, 0, 0, videoWidth, videoHeight);
         const imageData = canvasRef.current.toDataURL('image/png');
         setPhoto(imageData);
 
@@ -115,7 +123,7 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setVal
                 {isCameraOpen ? (
                     <Stack direction="column" alignItems="center" maxWidth={350}>
                         <video ref={videoRef} autoPlay playsInline style={{display: 'block',
-                            border: "1px solid #80A9F8", width: "100%", maxHeight: "370px", borderRadius: 40}}></video>
+                            border: "1px solid #80A9F8", width: "100%", height: "auto", borderRadius: 40}}></video>
                         <IconButton onClick={handleCapturePhoto}>
                             <CameraAltOutlinedIcon color="primary" fontSize="large" />
                         </IconButton>
@@ -123,8 +131,8 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setVal
                 ) : <Box component="img" src={photo ?? faceIdPhoto ?? Avatar} sx={{
                         border: "1px solid #80A9F8",
                         borderRadius: 10,
+                        objectFit: "contain",
                         maxWidth: {md: "350px", xs: "100%"},
-                        // maxHeight: {md: "370px", xs: "300px"}
                     }} />
                 }
                 <Stack direction="row" gap={3}>
@@ -142,7 +150,7 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setVal
                 </Stack>
             </Stack>
 
-            <canvas ref={canvasRef} style={{display: 'none'}} width="640" height="480"></canvas>
+            <canvas ref={canvasRef} style={{display: 'none'}}></canvas>
         </Box>
     );
 };

@@ -49,7 +49,15 @@ const FaceidCapture = ({setFaceId}) => {
 
     const handleCapturePhoto = () => {
         const context = canvasRef.current.getContext('2d');
-        context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        const video = videoRef.current;
+
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+
+        canvasRef.current.width = videoWidth;
+        canvasRef.current.height = videoHeight;
+
+        context.drawImage(video, 0, 0, videoWidth, videoHeight);
         const imageData = canvasRef.current.toDataURL('image/jpeg');
         setPhoto(imageData);
 
@@ -134,7 +142,7 @@ const FaceidCapture = ({setFaceId}) => {
                         {isCameraOpen ? (
                                 <Stack direction="column" alignItems="center" gap={1}>
                                     <video ref={videoRef} autoPlay playsInline style={{display: 'block', border: "1px solid #80A9F8",
-                                        width: "100%", borderRadius: 40}}></video>
+                                        width: "100%", height: "auto", borderRadius: 40}}></video>
                                     <IconButton onClick={handleCapturePhoto}>
                                         <CameraAltOutlinedIcon color="primary" fontSize="large" />
                                     </IconButton>
@@ -145,8 +153,8 @@ const FaceidCapture = ({setFaceId}) => {
                                      sx={{
                                          border: "1px solid #80A9F8",
                                          borderRadius: 10,
+                                         objectFit: "contain",
                                          width: "100%",
-                                         // maxHeight: {md: "370px", xs: "300px"}
                                      }} />
 
                                 {isCameraOpen ?
@@ -162,10 +170,7 @@ const FaceidCapture = ({setFaceId}) => {
                 </Box>
             </Modal>
 
-            {/* Hidden canvas element used for capturing the photo */}
-            <canvas ref={canvasRef} style={{display: 'none'}} width={canvasRef.current?.width}
-                    height={canvasRef.current?.height}></canvas>
-
+            <canvas ref={canvasRef} style={{display: 'none'}}></canvas>
         </Box>
     );
 };
