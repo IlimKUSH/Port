@@ -10,7 +10,9 @@ import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import {getCookies} from "../../../hooks/get-cookies";
+import {toast} from "react-toastify";
 
 const modalStyles = {
     position: 'absolute',
@@ -29,6 +31,7 @@ const FaceidCapture = ({setFaceId}) => {
 
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [photo, setPhoto] = useState(null);
 
     const videoRef = useRef(null);
@@ -96,6 +99,7 @@ const FaceidCapture = ({setFaceId}) => {
     }
 
     const handleSendPhoto = async (binary) => {
+        setLoading(true)
         // const blob = new Blob([binary], {type: "image/jpeg"})
         // const formData = new FormData()
         // formData.append("file", blob, "passport.jpeg")
@@ -111,9 +115,22 @@ const FaceidCapture = ({setFaceId}) => {
         })
             .then((res) => res.json())
             .then((data) => {
-                const parsedData = JSON.parse(data)
-                setFaceId(parsedData)
-                console.log(data)
+                setLoading(false)
+                if (data) {
+                    const parsedData = JSON.parse(data)
+                    setFaceId(parsedData)
+                    console.log(parsedData)
+                    toast("Клиент найден!", {type: "success"});
+                    handleCloseModal()
+                } else {
+                    toast("Что-то пошло не так", {type: "error"});
+                }
+            })
+            .catch((e) => {
+                toast("Произошла ошибка", { type: "error" });
+            })
+            .finally(() => {
+                setLoading(false)
             })
     }
 
@@ -143,9 +160,9 @@ const FaceidCapture = ({setFaceId}) => {
                                 <Stack direction="column" alignItems="center" gap={1}>
                                     <video ref={videoRef} autoPlay playsInline style={{display: 'block', border: "1px solid #80A9F8",
                                         width: "100%", height: "auto", borderRadius: 40}}></video>
-                                    <IconButton onClick={handleCapturePhoto}>
+                                    {loading ? <CircularProgress /> : <IconButton onClick={handleCapturePhoto}>
                                         <CameraAltOutlinedIcon color="primary" fontSize="large" />
-                                    </IconButton>
+                                    </IconButton>}
                                 </Stack>
                             ) :
                             <Stack direction="column" alignItems="center" gap={1}>

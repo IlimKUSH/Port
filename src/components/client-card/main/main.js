@@ -15,6 +15,8 @@ import {getCookies} from "../../../hooks/get-cookies";
 import Header from "../header/header";
 import BarcodeScanner from "../../ui/barcode-scanner/barcode-scanner";
 import Typography from "@mui/material/Typography";
+import {toast} from "react-toastify";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Main = () => {
     const cookies = getCookies();
@@ -26,6 +28,7 @@ const Main = () => {
     const [values, setValues] = useState(null)
     const [faceId, setFaceId] = useState(null)
     const [resetForm, setResetForm] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const {
         formState: {
@@ -50,6 +53,7 @@ const Main = () => {
     useEffect(() => {
         if (!faceId) return;
 
+        console.log("useEffect", faceId)
         fetch(process.env.REACT_APP_AXELOR_API + `/ws/rest/com.axelor.apps.base.db.Partner/${faceId}/fetch`, {
             method: 'POST',
             headers: {
@@ -83,6 +87,8 @@ const Main = () => {
     }, [faceId])
 
     const onSubmit = async (data) => {
+        setLoading(true)
+
         const payload = {
             data: {
                 faceIdUpdate: true,
@@ -108,17 +114,29 @@ const Main = () => {
             body: JSON.stringify(payload)
         })
             .then((res) => (res.json()))
-            .then((data) => setPartnerId(data.data.id))
+            .then((data) => {
+                if (data) {
+                    setPartnerId(data.data.id)
+                    toast("Успешно!", {type: "success"});
+                } else {
+                    toast("Что-то пошло не так", {type: "error"});
+                }
+            })
+            .catch((e) => {
+                toast("Произошла ошибка", { type: "error" });
+            })
+            .finally(() => {
+                setLoading(false)
+            })
     }
 
     const handleResetForm = () => {
         reset()
+        setFaceId(null)
         setResetForm(true)
         setPartnerId(null)
         setFaceIdPartnerId(null)
     }
-
-    console.log(errors)
 
     return (
         <>
@@ -134,7 +152,7 @@ const Main = () => {
                         sm: "column"
                     }
                 }}>
-                    <AvatarSection resetForm={resetForm} setResetForm={setResetForm} pictureId={faceIdPictureId}
+                    <AvatarSection resetForm={resetForm} setResetForm={setResetForm} pictureId={faceIdPictureId} faceId={faceId}
                                    setValues={(values) => setValues(values)} setPictureId={(id) => setPictureId(id)} />
                     <Card variant="outlined"
                           sx={{flex: 1, p: {md: "20px", xs: 0}, borderRadius: 2, borderWidth: {md: "1px", xs: 0}}}>
@@ -231,12 +249,12 @@ const Main = () => {
                     justifyContent: "center",
                     mt: 6
                 }}>
-                    <Button type="submit" variant="contained"
-                            sx={{fontWeight: 700, color: "#fff", width: 320, borderRadius: 10}}>Сохранить</Button>
+                    {loading ? <CircularProgress /> : <Button type="submit" variant="contained"
+                                                              sx={{fontWeight: 700, color: "#fff", width: 320, borderRadius: 10}}>Сохранить</Button>}
                 </Box>
             </Card>
 
-            <BarcodeScanner />
+            {/*<BarcodeScanner />*/}
 
         </>
     );

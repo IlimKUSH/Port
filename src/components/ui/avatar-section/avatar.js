@@ -13,7 +13,7 @@ import PassportCapture from "../passport-capture/passport-capture";
 import Avatar from "../../../assets/images/avatar.png"
 import {getCookies} from "../../../hooks/get-cookies";
 
-const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setValues}) => {
+const AvatarSection = ({resetForm, setResetForm, pictureId, faceId, setPictureId, setValues}) => {
     const cookies = getCookies();
 
     const [faceIdPhoto, setFaceIdPhoto] = useState(null)
@@ -95,8 +95,9 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setVal
     }
 
     useEffect(() => {
-        if (!pictureId) return;
-        fetch(process.env.REACT_APP_AXELOR_API + `/ws/rest/com.axelor.meta.db.MetaFile/${pictureId}/content/download`, {
+        console.log(pictureId, faceId, "faceId, pictureId")
+        if (!pictureId || !faceId) return;
+        fetch(process.env.REACT_APP_AXELOR_API + `/ws/rest/com.axelor.meta.db.MetaFile/${pictureId ?? faceId}/content/download`, {
             method: "GET",
             headers: {
                 "Authorization": "Basic YWRtaW46QWRtaW4yMDI0",
@@ -108,7 +109,7 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, setPictureId, setVal
                 console.log(data);
                 setFaceIdPhoto(URL.createObjectURL(data))
             })
-    }, [pictureId]);
+    }, [pictureId, faceId]);
 
     useEffect(() => {
         if (resetForm) {

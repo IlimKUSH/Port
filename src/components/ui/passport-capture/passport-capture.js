@@ -11,6 +11,8 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import {getCookies} from "../../../hooks/get-cookies";
 import Tooltip from "@mui/material/Tooltip";
+import {CircularProgress} from "@mui/material";
+import {toast} from "react-toastify";
 
 const modalStyles = {
     position: 'absolute',
@@ -27,6 +29,7 @@ const modalStyles = {
 const PassportCapture = ({setValues}) => {
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [photo, setPhoto] = useState(null);
 
     const videoRef = useRef(null);
@@ -94,6 +97,7 @@ const PassportCapture = ({setValues}) => {
     }
 
     const handleSendPhoto = async (binaryData) => {
+        setLoading(true)
         const blob = new Blob([binaryData], {type: "image/jpeg"})
         const formData = new FormData()
         formData.append("file", blob, "passport.jpeg")
@@ -104,7 +108,19 @@ const PassportCapture = ({setValues}) => {
         })
             .then((res) => res.json())
             .then((data) => {
-                setValues(data["Extracted Data"])
+                if (data) {
+                    setValues(data["Extracted Data"])
+                    toast("Проверка прошла успешно!", {type: "success"});
+                    handleCloseModal()
+                } else {
+                    toast("Что-то пошло не так", {type: "error"});
+                }
+            })
+            .catch((e) => {
+                toast("Произошла ошибка", { type: "error" });
+            })
+            .finally(() => {
+                setLoading(false)
             })
     }
 
@@ -138,9 +154,11 @@ const PassportCapture = ({setValues}) => {
                                         display: 'block', border: "1px solid #80A9F8",
                                         width: "100%", height: "auto", borderRadius: 40
                                     }}></video>
-                                    <IconButton onClick={handleCapturePhoto}>
-                                        <CameraAltOutlinedIcon color="primary" fontSize="large" />
-                                    </IconButton>
+                                    {loading ? <CircularProgress /> :
+                                        <IconButton onClick={handleCapturePhoto}>
+                                            <CameraAltOutlinedIcon color="primary" fontSize="large" />
+                                        </IconButton>
+                                    }
                                 </Stack>
                             ) :
                             <Stack direction="column" alignItems="center" gap={1}>
