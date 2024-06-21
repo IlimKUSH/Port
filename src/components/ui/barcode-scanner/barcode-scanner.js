@@ -47,14 +47,17 @@ const BarcodeScanner = ({id}) => {
     const onSuccess = async (code) => {
         await fetch(process.env.REACT_APP_AXELOR_API + `/ws/face-id/product-save`, {
             method: 'POST',
-            "Authorization": "Basic YWRtaW46QWRtaW4yMDI0",
-            'X-CSRF-Token': cookies['CSRF-TOKEN'],
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": "Basic YWRtaW46QWRtaW4yMDI0",
+                'X-CSRF-Token': cookies['CSRF-TOKEN'],
+            },
             body: JSON.stringify({
-                stockMoveId: id,
+                stockMoveId: Number(id),
                 barcode: code
             })
         })
-            .then(() => window.location.reload())
+            .then(() => window.parent.location.reload())
     }
 
     return (
