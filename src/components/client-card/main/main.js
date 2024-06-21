@@ -21,6 +21,11 @@ import CircularProgress from "@mui/material/CircularProgress";
 const Main = () => {
     const cookies = getCookies();
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('stockMove');
+
+    console.log(id)
+
     const [faceIdPictureId, setFaceIdPictureId] = useState(null)
     const [faceIdPartnerId, setFaceIdPartnerId] = useState(null)
     const [partnerId, setPartnerId] = useState(null)
@@ -44,16 +49,11 @@ const Main = () => {
 
     useEffect(() => {
         setValue("name", values?.name)
-        setValue("passportPersonalNumber", values?.passportPersonalNumber)
-        setValue("passportPersonalSeries", values?.passportPersonalSeries)
-        setValue("passportValidity", values?.passportValidity)
-        setValue("dateOfBirth", values?.dateOfBirth)
     }, [values]);
 
     useEffect(() => {
         if (!faceId) return;
 
-        console.log("useEffect", faceId)
         fetch(process.env.REACT_APP_AXELOR_API + `/ws/rest/com.axelor.apps.base.db.Partner/${faceId}/fetch`, {
             method: 'POST',
             headers: {
@@ -76,10 +76,6 @@ const Main = () => {
             .then((data) => {
                 data?.data?.map((item) => {
                     setValue("name", item?.name)
-                    setValue("passportPersonalNumber", item?.passportPersonalNumber)
-                    setValue("passportPersonalSeries", item?.passportPersonalSeries)
-                    setValue("passportValidity", item?.passportValidity)
-                    setValue("dateOfBirth", item?.dateOfBirth)
                     setFaceIdPictureId(item.picture.id)
                     setFaceIdPartnerId(item.id)
                 })
@@ -138,6 +134,10 @@ const Main = () => {
         setFaceIdPartnerId(null)
     }
 
+    const handleRefreshPage = () => {
+        window.location.reload();
+    }
+
     return (
         <>
             <Header setFaceId={setFaceId} handleResetForm={handleResetForm} />
@@ -147,10 +147,8 @@ const Main = () => {
                 borderRadius: 2
             }}>
                 <Stack gap={4} sx={{
-                    flexDirection: {
-                        md: "row",
-                        sm: "column"
-                    }
+                    flexDirection: "column",
+                    alignItems: "center"
                 }}>
                     <AvatarSection resetForm={resetForm} setResetForm={setResetForm} pictureId={faceIdPictureId} faceId={faceId}
                                    setValues={(values) => setValues(values)} setPictureId={(id) => setPictureId(id)} />
@@ -173,74 +171,6 @@ const Main = () => {
                                            value={field.value != null ? field.value : ""}
                                 />
                             )}/>
-
-                            <Controller name="passportPersonalNumber" control={control} render={({field}) => (
-                                <TextField {...field} label="ПИН" variant="standard"
-                                           InputLabelProps={{
-                                               shrink: true,
-                                               sx: {fontSize: "14px", color: "#ACB1C0"},
-                                           }}
-                                           sx={{
-                                               ".MuiInputBase-root": {
-                                                   fontWeight: 600
-                                               }
-                                           }}
-                                           error={!!errors.passportPersonalNumber?.message ?? false}
-                                           helperText={!!errors.passportPersonalNumber?.message && <Typography variant="caption">{errors.passportPersonalNumber.message}</Typography>}
-                                           value={field.value != null ? field.value : ""}
-                                />
-                            )}/>
-
-                            <Controller name="passportPersonalSeries" control={control} render={({field}) => (
-                                <TextField {...field} label="Номер документа" variant="standard"
-                                           InputLabelProps={{
-                                               shrink: true,
-                                               sx: {fontSize: "14px", color: "#ACB1C0"},
-                                           }}
-                                           sx={{
-                                               ".MuiInputBase-root": {
-                                                   fontWeight: 600
-                                               }
-                                           }}
-                                           error={!!errors.passportPersonalSeries?.message ?? false}
-                                           helperText={!!errors.passportPersonalSeries?.message && <Typography variant="caption">{errors.passportPersonalSeries.message}</Typography>}
-                                           value={field.value != null ? field.value : ""}
-                                />
-                            )}/>
-
-                            <Controller name="passportValidity" control={control} render={({field}) => (
-                                <TextField {...field} type="date" variant="standard" label="Срок действия"
-                                           InputLabelProps={{
-                                               shrink: true,
-                                               sx: {fontSize: "14px", color: "#ACB1C0"},
-                                           }}
-                                           sx={{
-                                               ".MuiInputBase-root": {
-                                                   fontWeight: 600
-                                               }
-                                           }}
-                                           error={!!errors.passportValidity?.message ?? false}
-                                           helperText={!!errors.passportValidity?.message && <Typography variant="caption">{errors.passportValidity.message}</Typography>}
-                                           value={field.value != null ? field.value : ""}
-                                />
-                            )}/>
-
-                            <Controller name="dateOfBirth" control={control} render={({field}) => (
-                                <TextField {...field} type="date" variant="standard" label="Дата рождения"
-                                           InputLabelProps={{
-                                               shrink: true,
-                                               sx: {fontSize: "14px", color: "#ACB1C0"},
-                                           }}
-                                           sx={{
-                                               ".MuiInputBase-root": {
-                                                   fontWeight: 600
-                                               }
-                                           }}
-                                           error={!!errors.dateOfBirth?.message ?? false}
-                                           helperText={!!errors.dateOfBirth?.message && <Typography variant="caption">{errors.dateOfBirth.message}</Typography>}
-                                           value={field.value != null ? field.value : ""}
-                                />
-                            )}/>
                         </Stack>
                     </Card>
                 </Stack>
@@ -249,8 +179,8 @@ const Main = () => {
                     justifyContent: "center",
                     mt: 6
                 }}>
-                    {loading ? <CircularProgress /> : <Button type="submit" variant="contained"
-                                                              sx={{fontWeight: 700, color: "#fff", width: 320, borderRadius: 10}}>Сохранить</Button>}
+                    {loading ? <CircularProgress /> : <Button variant="contained" onClick={handleRefreshPage}
+                                                              sx={{fontWeight: 700, color: "#fff", width: 320, borderRadius: 10}}>Перезагрузить страницу</Button>}
                 </Box>
             </Card>
 
