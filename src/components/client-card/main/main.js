@@ -21,6 +21,11 @@ import CircularProgress from "@mui/material/CircularProgress";
 const Main = () => {
     const cookies = getCookies();
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('stockMove');
+
+    console.log(id)
+
     const [faceIdPictureId, setFaceIdPictureId] = useState(null)
     const [faceIdPartnerId, setFaceIdPartnerId] = useState(null)
     const [partnerId, setPartnerId] = useState(null)
@@ -140,121 +145,121 @@ const Main = () => {
 
     return (
         <>
-            <Header setFaceId={setFaceId} handleResetForm={handleResetForm} />
+            {/*<Header setFaceId={setFaceId} handleResetForm={handleResetForm} />*/}
 
-            <Card component="form" onSubmit={handleSubmit(onSubmit)} variant="outlined" sx={{
-                p: 4,
-                borderRadius: 2
-            }}>
-                <Stack gap={4} sx={{
-                    flexDirection: {
-                        md: "row",
-                        sm: "column"
-                    }
-                }}>
-                    <AvatarSection resetForm={resetForm} setResetForm={setResetForm} pictureId={faceIdPictureId} faceId={faceId}
-                                   setValues={(values) => setValues(values)} setPictureId={(id) => setPictureId(id)} />
-                    <Card variant="outlined"
-                          sx={{flex: 1, p: {md: "20px", xs: 0}, borderRadius: 2, borderWidth: {md: "1px", xs: 0}}}>
-                        <Stack direction="column" gap={2}>
-                            <Controller name="name" control={control} render={({field}) => (
-                                <TextField {...field} label="Фамилия Имя" variant="standard"
-                                           InputLabelProps={{
-                                               shrink: true,
-                                               sx: {fontSize: "14px", color: "#ACB1C0"},
-                                           }}
-                                           sx={{
-                                               ".MuiInputBase-root": {
-                                                   fontWeight: 600
-                                               }
-                                           }}
-                                           error={!!errors.name?.message ?? false}
-                                           helperText={!!errors.name?.message && <Typography variant="caption">{errors.name.message}</Typography>}
-                                           value={field.value != null ? field.value : ""}
-                                />
-                            )}/>
+            {/*<Card component="form" onSubmit={handleSubmit(onSubmit)} variant="outlined" sx={{*/}
+            {/*    p: 4,*/}
+            {/*    borderRadius: 2*/}
+            {/*}}>*/}
+            {/*    <Stack gap={4} sx={{*/}
+            {/*        flexDirection: {*/}
+            {/*            md: "row",*/}
+            {/*            sm: "column"*/}
+            {/*        }*/}
+            {/*    }}>*/}
+            {/*        <AvatarSection resetForm={resetForm} setResetForm={setResetForm} pictureId={faceIdPictureId} faceId={faceId}*/}
+            {/*                       setValues={(values) => setValues(values)} setPictureId={(id) => setPictureId(id)} />*/}
+            {/*        <Card variant="outlined"*/}
+            {/*              sx={{flex: 1, p: {md: "20px", xs: 0}, borderRadius: 2, borderWidth: {md: "1px", xs: 0}}}>*/}
+            {/*            <Stack direction="column" gap={2}>*/}
+            {/*                <Controller name="name" control={control} render={({field}) => (*/}
+            {/*                    <TextField {...field} label="Фамилия Имя" variant="standard"*/}
+            {/*                               InputLabelProps={{*/}
+            {/*                                   shrink: true,*/}
+            {/*                                   sx: {fontSize: "14px", color: "#ACB1C0"},*/}
+            {/*                               }}*/}
+            {/*                               sx={{*/}
+            {/*                                   ".MuiInputBase-root": {*/}
+            {/*                                       fontWeight: 600*/}
+            {/*                                   }*/}
+            {/*                               }}*/}
+            {/*                               error={!!errors.name?.message ?? false}*/}
+            {/*                               helperText={!!errors.name?.message && <Typography variant="caption">{errors.name.message}</Typography>}*/}
+            {/*                               value={field.value != null ? field.value : ""}*/}
+            {/*                    />*/}
+            {/*                )}/>*/}
 
-                            <Controller name="passportPersonalNumber" control={control} render={({field}) => (
-                                <TextField {...field} label="ПИН" variant="standard"
-                                           InputLabelProps={{
-                                               shrink: true,
-                                               sx: {fontSize: "14px", color: "#ACB1C0"},
-                                           }}
-                                           sx={{
-                                               ".MuiInputBase-root": {
-                                                   fontWeight: 600
-                                               }
-                                           }}
-                                           error={!!errors.passportPersonalNumber?.message ?? false}
-                                           helperText={!!errors.passportPersonalNumber?.message && <Typography variant="caption">{errors.passportPersonalNumber.message}</Typography>}
-                                           value={field.value != null ? field.value : ""}
-                                />
-                            )}/>
+            {/*                <Controller name="passportPersonalNumber" control={control} render={({field}) => (*/}
+            {/*                    <TextField {...field} label="ПИН" variant="standard"*/}
+            {/*                               InputLabelProps={{*/}
+            {/*                                   shrink: true,*/}
+            {/*                                   sx: {fontSize: "14px", color: "#ACB1C0"},*/}
+            {/*                               }}*/}
+            {/*                               sx={{*/}
+            {/*                                   ".MuiInputBase-root": {*/}
+            {/*                                       fontWeight: 600*/}
+            {/*                                   }*/}
+            {/*                               }}*/}
+            {/*                               error={!!errors.passportPersonalNumber?.message ?? false}*/}
+            {/*                               helperText={!!errors.passportPersonalNumber?.message && <Typography variant="caption">{errors.passportPersonalNumber.message}</Typography>}*/}
+            {/*                               value={field.value != null ? field.value : ""}*/}
+            {/*                    />*/}
+            {/*                )}/>*/}
 
-                            <Controller name="passportPersonalSeries" control={control} render={({field}) => (
-                                <TextField {...field} label="Номер документа" variant="standard"
-                                           InputLabelProps={{
-                                               shrink: true,
-                                               sx: {fontSize: "14px", color: "#ACB1C0"},
-                                           }}
-                                           sx={{
-                                               ".MuiInputBase-root": {
-                                                   fontWeight: 600
-                                               }
-                                           }}
-                                           error={!!errors.passportPersonalSeries?.message ?? false}
-                                           helperText={!!errors.passportPersonalSeries?.message && <Typography variant="caption">{errors.passportPersonalSeries.message}</Typography>}
-                                           value={field.value != null ? field.value : ""}
-                                />
-                            )}/>
+            {/*                <Controller name="passportPersonalSeries" control={control} render={({field}) => (*/}
+            {/*                    <TextField {...field} label="Номер документа" variant="standard"*/}
+            {/*                               InputLabelProps={{*/}
+            {/*                                   shrink: true,*/}
+            {/*                                   sx: {fontSize: "14px", color: "#ACB1C0"},*/}
+            {/*                               }}*/}
+            {/*                               sx={{*/}
+            {/*                                   ".MuiInputBase-root": {*/}
+            {/*                                       fontWeight: 600*/}
+            {/*                                   }*/}
+            {/*                               }}*/}
+            {/*                               error={!!errors.passportPersonalSeries?.message ?? false}*/}
+            {/*                               helperText={!!errors.passportPersonalSeries?.message && <Typography variant="caption">{errors.passportPersonalSeries.message}</Typography>}*/}
+            {/*                               value={field.value != null ? field.value : ""}*/}
+            {/*                    />*/}
+            {/*                )}/>*/}
 
-                            <Controller name="passportValidity" control={control} render={({field}) => (
-                                <TextField {...field} type="date" variant="standard" label="Срок действия"
-                                           InputLabelProps={{
-                                               shrink: true,
-                                               sx: {fontSize: "14px", color: "#ACB1C0"},
-                                           }}
-                                           sx={{
-                                               ".MuiInputBase-root": {
-                                                   fontWeight: 600
-                                               }
-                                           }}
-                                           error={!!errors.passportValidity?.message ?? false}
-                                           helperText={!!errors.passportValidity?.message && <Typography variant="caption">{errors.passportValidity.message}</Typography>}
-                                           value={field.value != null ? field.value : ""}
-                                />
-                            )}/>
+            {/*                <Controller name="passportValidity" control={control} render={({field}) => (*/}
+            {/*                    <TextField {...field} type="date" variant="standard" label="Срок действия"*/}
+            {/*                               InputLabelProps={{*/}
+            {/*                                   shrink: true,*/}
+            {/*                                   sx: {fontSize: "14px", color: "#ACB1C0"},*/}
+            {/*                               }}*/}
+            {/*                               sx={{*/}
+            {/*                                   ".MuiInputBase-root": {*/}
+            {/*                                       fontWeight: 600*/}
+            {/*                                   }*/}
+            {/*                               }}*/}
+            {/*                               error={!!errors.passportValidity?.message ?? false}*/}
+            {/*                               helperText={!!errors.passportValidity?.message && <Typography variant="caption">{errors.passportValidity.message}</Typography>}*/}
+            {/*                               value={field.value != null ? field.value : ""}*/}
+            {/*                    />*/}
+            {/*                )}/>*/}
 
-                            <Controller name="dateOfBirth" control={control} render={({field}) => (
-                                <TextField {...field} type="date" variant="standard" label="Дата рождения"
-                                           InputLabelProps={{
-                                               shrink: true,
-                                               sx: {fontSize: "14px", color: "#ACB1C0"},
-                                           }}
-                                           sx={{
-                                               ".MuiInputBase-root": {
-                                                   fontWeight: 600
-                                               }
-                                           }}
-                                           error={!!errors.dateOfBirth?.message ?? false}
-                                           helperText={!!errors.dateOfBirth?.message && <Typography variant="caption">{errors.dateOfBirth.message}</Typography>}
-                                           value={field.value != null ? field.value : ""}
-                                />
-                            )}/>
-                        </Stack>
-                    </Card>
-                </Stack>
-                <Box sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    mt: 6
-                }}>
-                    {loading ? <CircularProgress /> : <Button type="submit" variant="contained"
-                                                              sx={{fontWeight: 700, color: "#fff", width: 320, borderRadius: 10}}>Сохранить</Button>}
-                </Box>
-            </Card>
+            {/*                <Controller name="dateOfBirth" control={control} render={({field}) => (*/}
+            {/*                    <TextField {...field} type="date" variant="standard" label="Дата рождения"*/}
+            {/*                               InputLabelProps={{*/}
+            {/*                                   shrink: true,*/}
+            {/*                                   sx: {fontSize: "14px", color: "#ACB1C0"},*/}
+            {/*                               }}*/}
+            {/*                               sx={{*/}
+            {/*                                   ".MuiInputBase-root": {*/}
+            {/*                                       fontWeight: 600*/}
+            {/*                                   }*/}
+            {/*                               }}*/}
+            {/*                               error={!!errors.dateOfBirth?.message ?? false}*/}
+            {/*                               helperText={!!errors.dateOfBirth?.message && <Typography variant="caption">{errors.dateOfBirth.message}</Typography>}*/}
+            {/*                               value={field.value != null ? field.value : ""}*/}
+            {/*                    />*/}
+            {/*                )}/>*/}
+            {/*            </Stack>*/}
+            {/*        </Card>*/}
+            {/*    </Stack>*/}
+            {/*    <Box sx={{*/}
+            {/*        display: "flex",*/}
+            {/*        justifyContent: "center",*/}
+            {/*        mt: 6*/}
+            {/*    }}>*/}
+            {/*        {loading ? <CircularProgress /> : <Button type="submit" variant="contained"*/}
+            {/*                                                  sx={{fontWeight: 700, color: "#fff", width: 320, borderRadius: 10}}>Сохранить</Button>}*/}
+            {/*    </Box>*/}
+            {/*</Card>*/}
 
-            {/*<BarcodeScanner />*/}
+            <BarcodeScanner id={id} />
 
         </>
     );

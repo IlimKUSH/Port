@@ -3,8 +3,9 @@ import { Html5Qrcode } from "html5-qrcode";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import {getCookies} from "../../../hooks/get-cookies";
+import {toast} from "react-toastify";
 
-const BarcodeScanner = () => {
+const BarcodeScanner = ({id}) => {
     const cookies = getCookies();
 
     const [isEnabled, setEnabled] = useState(false);
@@ -25,6 +26,7 @@ const BarcodeScanner = () => {
             console.log(decodedText)
             onSuccess(decodedText)
             setEnabled(false);
+            toast("Успешно!", {type: "success"});
         };
 
         if (isEnabled) {
@@ -43,18 +45,22 @@ const BarcodeScanner = () => {
     }
 
     const onSuccess = async (code) => {
-        await fetch(process.env.REACT_APP_AXELOR_API + `/ws/product/barcode/${code}`, {
+        await fetch(process.env.REACT_APP_AXELOR_API + `/ws/face-id/product-save`, {
+            method: 'POST',
             "Authorization": "Basic YWRtaW46QWRtaW4yMDI0",
             'X-CSRF-Token': cookies['CSRF-TOKEN'],
+            body: JSON.stringify({
+                stockMoveId: id,
+                barcode: code
+            })
         })
-            .then((res) => res.json())
-            .then((data) => window.open(data?.data, "_blank"))
+            .then(() => window.location.reload())
     }
 
     return (
         <Box pb={10}>
             <Button variant="contained" sx={{color: "#fff"}} onClick={handleToggle}>
-                {isEnabled ? "Закрыть сканер" : "Открыть сканер"}
+                {isEnabled ? "Закрыть сканер" : "Отсканировать товар"}
             </Button>
 
             {isEnabled && <Box
