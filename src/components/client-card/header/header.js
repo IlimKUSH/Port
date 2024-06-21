@@ -13,9 +13,6 @@ const Header = ({setFaceId, handleResetForm}) => {
             </Typography>
             <Stack direction="row" gap={4}>
                 <FaceidCapture setFaceId={setFaceId} />
-                <Button onClick={handleResetForm} variant="contained" sx={{ color: "#fff", textTransform: "unset"}} endIcon={<AddIcon color="contrast" />}>
-                    Добавить клиента
-                </Button>
             </Stack>
 
         </Stack>

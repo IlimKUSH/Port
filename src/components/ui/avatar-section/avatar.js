@@ -95,7 +95,6 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, faceId, setPictureId
     }
 
     useEffect(() => {
-        console.log(pictureId, faceId, "faceId, pictureId")
         if (!pictureId || !faceId) return;
         fetch(process.env.REACT_APP_AXELOR_API + `/ws/rest/com.axelor.meta.db.MetaFile/${pictureId ?? faceId}/content/download`, {
             method: "GET",
@@ -133,22 +132,9 @@ const AvatarSection = ({resetForm, setResetForm, pictureId, faceId, setPictureId
                         border: "1px solid #80A9F8",
                         borderRadius: 10,
                         objectFit: "contain",
-                        maxWidth: {md: "350px", xs: "100%"},
+                        maxWidth: {md: "300px", xs: "100%"},
                     }} />
                 }
-                <Stack direction="row" gap={3}>
-                    <Tooltip title={isCameraOpen ? "Выключить камеру" : "Включить камеру"}>
-                        <IconButton onClick={handleOpenCamera}>
-                            {isCameraOpen ? <CloseOutlinedIcon color="primary" fontSize="unset" /> : <CameraAltOutlinedIcon color="primary" fontSize="unset" />}
-                        </IconButton>
-                    </Tooltip>
-                    <PassportCapture setValues={setValues} />
-                    <Tooltip title="Удалить фото">
-                        <IconButton onClick={handleDeletePhoto}>
-                            <DeleteOutlineIcon color="primary" fontSize="unset" />
-                        </IconButton>
-                    </Tooltip>
-                </Stack>
             </Stack>
 
             <canvas ref={canvasRef} style={{display: 'none'}}></canvas>
