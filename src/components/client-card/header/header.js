@@ -6,11 +6,10 @@ import FaceidCapture from "../../ui/faceid-capture/faceid-capture";
 
 const Header = ({setFaceId, handleResetForm}) => {
     return (
-        <Stack justifyContent="space-between" alignItems="center" width="100%"
-               sx={{flexDirection: {md: "row", sm: "row", xs: "column"}, gap: 2}}>
-            <Typography variant="h6" color="primary.main">
-                Карточка клиента
-            </Typography>
+        <Stack>
+            {/*<Typography variant="h6" color="primary.main">*/}
+            {/*    Карточка клиента*/}
+            {/*</Typography>*/}
             <Stack direction="row" gap={4}>
                 <FaceidCapture setFaceId={setFaceId} />
             </Stack>

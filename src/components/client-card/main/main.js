@@ -54,7 +54,7 @@ const Main = () => {
     useEffect(() => {
         if (!faceId) return;
 
-        fetch(process.env.REACT_APP_AXELOR_API + `/ws/rest/com.axelor.apps.base.db.Partner/${faceId}/fetch`, {
+        fetch(process.env.REACT_APP_AXELOR_API + `/ws/face-id/save`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,23 +62,23 @@ const Main = () => {
                 'X-CSRF-Token': cookies['CSRF-TOKEN'],
             },
             body: JSON.stringify({
-                fields: [
-                    "passportPersonalNumber",
-                    "name",
-                    "passportPersonalSeries",
-                    "passportValidity",
-                    "dateOfBirth",
-                    "picture"
-                ]
+                stockMoveId: Number(id),
+                partnerId: Number(faceId)
             })
         })
             .then((res) => res.json())
             .then((data) => {
-                data?.data?.map((item) => {
-                    setValue("name", item?.name)
-                    setFaceIdPictureId(item.picture.id)
-                    setFaceIdPartnerId(item.id)
-                })
+                if (data) {
+                    window.parent.location.reload()
+                    console.log(data)
+                    console.log("reload")
+                    data?.data?.map((item) => {
+                        setValue("name", item?.name)
+                        setFaceIdPictureId(item.picture.id)
+                        setFaceIdPartnerId(item.id)
+                    })
+                }
+
             })
     }, [faceId])
 
@@ -134,55 +134,43 @@ const Main = () => {
         setFaceIdPartnerId(null)
     }
 
-    const handleRefreshPage = () => {
-        window.location.reload();
-    }
-
     return (
         <>
             <Header setFaceId={setFaceId} handleResetForm={handleResetForm} />
 
-            <Card component="form" onSubmit={handleSubmit(onSubmit)} variant="outlined" sx={{
-                p: 4,
-                borderRadius: 2
-            }}>
-                <Stack gap={4} sx={{
-                    flexDirection: "column",
-                    alignItems: "center"
-                }}>
-                    <AvatarSection resetForm={resetForm} setResetForm={setResetForm} pictureId={faceIdPictureId} faceId={faceId}
-                                   setValues={(values) => setValues(values)} setPictureId={(id) => setPictureId(id)} />
-                    <Card variant="outlined"
-                          sx={{flex: 1, p: {md: "20px", xs: 0}, borderRadius: 2, borderWidth: {md: "1px", xs: 0}}}>
-                        <Stack direction="column" gap={2}>
-                            <Controller name="name" control={control} render={({field}) => (
-                                <TextField {...field} label="Фамилия Имя" variant="standard"
-                                           InputLabelProps={{
-                                               shrink: true,
-                                               sx: {fontSize: "14px", color: "#ACB1C0"},
-                                           }}
-                                           sx={{
-                                               ".MuiInputBase-root": {
-                                                   fontWeight: 600
-                                               }
-                                           }}
-                                           error={!!errors.name?.message ?? false}
-                                           helperText={!!errors.name?.message && <Typography variant="caption">{errors.name.message}</Typography>}
-                                           value={field.value != null ? field.value : ""}
-                                />
-                            )}/>
-                        </Stack>
-                    </Card>
-                </Stack>
-                <Box sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    mt: 6
-                }}>
-                    {loading ? <CircularProgress /> : <Button variant="contained" onClick={handleRefreshPage}
-                                                              sx={{fontWeight: 700, color: "#fff", width: 320, borderRadius: 10}}>Перезагрузить страницу</Button>}
-                </Box>
-            </Card>
+            {/*<Card component="form" onSubmit={handleSubmit(onSubmit)} variant="outlined" sx={{*/}
+            {/*    p: 4,*/}
+            {/*    borderRadius: 2*/}
+            {/*}}>*/}
+            {/*    <Stack gap={4} sx={{*/}
+            {/*        flexDirection: "column",*/}
+            {/*        alignItems: "center"*/}
+            {/*    }}>*/}
+            {/*        <AvatarSection resetForm={resetForm} setResetForm={setResetForm} pictureId={faceIdPictureId} faceId={faceId}*/}
+            {/*                       setValues={(values) => setValues(values)} setPictureId={(id) => setPictureId(id)} />*/}
+            {/*        <Card variant="outlined"*/}
+            {/*              sx={{flex: 1, p: {md: "20px", xs: 0}, borderRadius: 2, borderWidth: {md: "1px", xs: 0}}}>*/}
+            {/*            <Stack direction="column" gap={2}>*/}
+            {/*                <Controller name="name" control={control} render={({field}) => (*/}
+            {/*                    <TextField {...field} label="Фамилия Имя" variant="standard"*/}
+            {/*                               InputLabelProps={{*/}
+            {/*                                   shrink: true,*/}
+            {/*                                   sx: {fontSize: "14px", color: "#ACB1C0"},*/}
+            {/*                               }}*/}
+            {/*                               sx={{*/}
+            {/*                                   ".MuiInputBase-root": {*/}
+            {/*                                       fontWeight: 600*/}
+            {/*                                   }*/}
+            {/*                               }}*/}
+            {/*                               error={!!errors.name?.message ?? false}*/}
+            {/*                               helperText={!!errors.name?.message && <Typography variant="caption">{errors.name.message}</Typography>}*/}
+            {/*                               value={field.value != null ? field.value : ""}*/}
+            {/*                    />*/}
+            {/*                )}/>*/}
+            {/*            </Stack>*/}
+            {/*        </Card>*/}
+            {/*    </Stack>*/}
+            {/*</Card>*/}
 
             {/*<BarcodeScanner />*/}
 
